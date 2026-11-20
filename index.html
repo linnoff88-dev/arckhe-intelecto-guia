@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>INTELECTO — Assistente de IA pessoal, sem frameworks inchados</title>
+<meta name="description" content="Assistente de IA pessoal em Python puro: roda no seu Mac, fala via Telegram, lembra de tudo com SQLite FTS5, usa OpenRouter ou Ollama. Sem Docker, sem cloud obrigatória.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0c0c10; --bg2:#14141b; --card:#16161e; --line:#272730;
+    --txt:#e9e9ee; --mut:#9a9aa6; --amb:#E2A23B; --amb2:#f0c070; --sky:#38bdf8;
+    color-scheme:dark;
+  }
+  body.light{
+    --bg:#f6f7f9; --bg2:#eceef2; --card:#ffffff; --line:#e1e3ea;
+    --txt:#1a1a22; --mut:#5b5b68; --amb:#b9791d; --amb2:#a16207; --sky:#0369a1;
+    color-scheme:light;
+  }
+  body.light .hero .glow{opacity:.5}
+  body.light pre{background:#0e0e14;color:#d6d6e0}
+  body.light pre .c{color:#8a8a98}
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.65 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:Sora,sans-serif;line-height:1.15;margin:0}
+  a{color:var(--amb);text-decoration:none}
+  code,pre{font-family:"JetBrains Mono",monospace}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 22px}
+  .mut{color:var(--mut)} .amb{color:var(--amb)}
+  .chip{display:inline-block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--amb);font-weight:600;font-family:Sora}
+  nav{position:sticky;top:0;z-index:30;backdrop-filter:blur(12px);background:rgba(12,12,16,.78);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;gap:22px;height:60px}
+  nav .brand{display:flex;align-items:center;gap:8px;font-family:Sora;font-weight:800;letter-spacing:-.02em;color:var(--amb)}
+  nav .brand .emoji{font-size:1.25rem}
+  nav .sep{color:var(--mut);opacity:.45}
+  nav .inema{color:var(--sky);font-weight:600;font-size:.88rem;font-family:Sora}
+  nav .inema:hover{filter:brightness(1.15)}
+  nav .links{margin-left:auto;display:flex;align-items:center;gap:20px;font-size:.92rem}
+  nav .links a.sec{color:var(--mut)} nav .links a.sec:hover{color:var(--txt)}
+  .tgl{background:var(--bg2);border:1px solid var(--line);color:var(--txt);width:38px;height:38px;border-radius:10px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:1.05rem}
+  .tgl:hover{border-color:var(--amb)}
+  .btn{display:inline-block;background:var(--amb);color:#1a1206;font-weight:600;padding:.6em 1.05em;border-radius:10px;font-family:Sora}
+  .btn.ghost{background:transparent;color:var(--txt);border:1px solid var(--line)}
+  @media(max-width:760px){nav .links a.sec{display:none}}
+  .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+  .hero .glow{position:absolute;inset:-40% -20% auto auto;width:70%;height:600px;background:radial-gradient(closest-side,rgba(226,162,59,.22),transparent 70%);pointer-events:none}
+  .hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;padding:74px 22px}
+  .hero h1{font-size:clamp(2.2rem,5vw,3.5rem);font-weight:800;letter-spacing:-.025em}
+  .hero p.lead{font-size:1.18rem;color:var(--mut);margin:1.1em 0 1.6em;max-width:34ch}
+  .hero .cta{display:flex;gap:12px;flex-wrap:wrap}
+  .hero figure{margin:0;border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 80px -30px #000}
+  .hero figure img{width:100%;display:block}
+  @media(max-width:780px){.hero .wrap{grid-template-columns:1fr;padding:48px 22px}}
+  section{padding:62px 0;border-bottom:1px solid var(--line)}
+  section h2{font-size:clamp(1.5rem,3.4vw,2.1rem);font-weight:800;letter-spacing:-.02em}
+  section .sub{color:var(--mut);margin:.6em 0 2em;max-width:62ch}
+  .grid{display:grid;gap:16px}
+  .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)} .g2{grid-template-columns:repeat(2,1fr)}
+  @media(max-width:820px){.g3,.g4{grid-template-columns:1fr 1fr}}
+  @media(max-width:540px){.g2,.g3,.g4{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .card h3{font-size:1.05rem;margin-bottom:.4em}
+  .card p{color:var(--mut);font-size:.92rem;margin:0}
+  .num{display:inline-flex;width:30px;height:30px;align-items:center;justify-content:center;border-radius:8px;background:rgba(226,162,59,.14);color:var(--amb);font-family:Sora;font-weight:800;font-size:.9rem;margin-bottom:.7em}
+  .flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+  .flow span{background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:.45em .9em;font-size:.85rem;font-family:Sora;font-weight:600}
+  .flow .arr{color:var(--amb);border:none;background:none;padding:0 .1em}
+  pre{background:#0a0a0e;border:1px solid var(--line);border-radius:12px;padding:16px 18px;overflow:auto;font-size:.86rem;line-height:1.6;color:#d6d6e0}
+  pre .c{color:#6f6f7c} pre .k{color:var(--amb2)} pre .s{color:#9ece6a}
+  .step{display:grid;grid-template-columns:46px 1fr;gap:16px;margin-bottom:26px}
+  .step .b{width:46px;height:46px;border-radius:12px;background:var(--amb);color:#1a1206;font-family:Sora;font-weight:800;font-size:1.25rem;display:flex;align-items:center;justify-content:center}
+  .step h3{font-size:1.12rem;margin-bottom:.3em}
+  .step p{color:var(--mut);margin:.2em 0 .7em}
+  .ex{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:680px){.ex{grid-template-columns:1fr}}
+  .ex figure{margin:0;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+  .ex figure img{width:100%;display:block}
+  .ex figcaption{padding:12px 14px;font-size:.88rem;color:var(--mut);background:var(--card)}
+  .phase{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
+  .phase:last-child{border:none}
+  .phase .tag{flex:0 0 92px;font-family:Sora;font-weight:800;color:var(--amb)}
+  .phase .d strong{display:block;margin-bottom:.2em}
+  .phase .d span{color:var(--mut);font-size:.92rem}
+  footer{padding:46px 0;text-align:center;color:var(--mut);font-size:.9rem}
+  .pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:.3em .8em;font-size:.78rem;color:var(--mut);margin:0 4px}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <a class="brand" href="#top"><span class="emoji">🧠</span> INTELECTO</a>
+  <span class="sep">|</span>
+  <a class="inema" href="https://inema.club" target="_blank" rel="noopener">INEMA.CLUB</a>
+  <div class="links">
+    <a class="sec" href="https://inematds.github.io/intelecto/" target="_blank" rel="noopener">Projeto INTELECTO ↗</a>
+    <a class="sec" href="#oque">O que é</a>
+    <a class="sec" href="#fluxo">Como funciona</a>
+    <a class="sec" href="#guia">Guia de uso</a>
+    <a class="sec" href="#exemplos">Exemplos</a>
+    <a class="sec" href="#roadmap">Roadmap</a>
+    <button class="tgl" id="themeToggle" aria-label="Alternar tema" title="Alternar tema">🌙</button>
+    <a class="btn" href="https://github.com/inematds/intelecto" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</div></nav>
+
+<header class="hero" id="top">
+  <div class="glow"></div>
+  <div class="wrap">
+    <div>
+      <span class="chip">Assistente de IA pessoal · Python puro</span>
+      <h1>Inteligência <span class="amb">pessoal</span>, sem frameworks inchados</h1>
+      <p class="lead">Roda no seu Mac, fala via Telegram, lembra de tudo e tem personalidade definida por você. Sem Docker, sem cloud obrigatória, ~3.000 linhas legíveis e 7 dependências.</p>
+      <div class="cta">
+        <a class="btn" href="#guia">Começar o guia</a>
+        <a class="btn ghost" href="https://github.com/inematds/intelecto" target="_blank" rel="noopener">Ver no GitHub</a>
+      </div>
+    </div>
+    <figure><pre><span class="c"># clone e suba tudo</span>
+<span class="k">git clone</span> <span class="s">https://github.com/inematds/intelecto.git</span>
+<span class="k">cd</span> intelecto
+<span class="k">./start.sh</span>  <span class="c"># venv + deps + wizard</span></pre></figure>
+  </div>
+</header>
+
+<section id="oque"><div class="wrap">
+  <span class="chip">O que é</span>
+  <h2>Um agente pessoal construído do zero em Python</h2>
+  <p class="sub">INTELECTO é o oposto de um framework de agente pesado: sem cloud obrigatória, sem Docker, sem dashboard web. Single-owner — é seu. O Telegram é a interface, e a personalidade vive em arquivos Markdown que você edita.</p>
+  <div class="grid g3">
+    <div class="card"><h3>🧠 Leve e legível</h3><p>~3.000 linhas, 35 arquivos, 7 dependências pip, 0 containers Docker. Nada de YAML infinito — <code>./start.sh</code> e acabou.</p></div>
+    <div class="card"><h3>🧠 Local ou cloud, você escolhe</h3><p>OpenRouter (100+ modelos via LiteLLM) ou Ollama 100% local — zero custo, zero privacidade comprometida.</p></div>
+    <div class="card"><h3>🧠 Memória de verdade</h3><p>SQLite FTS5 com ranking BM25 e deduplicação — sem embeddings, sem chamadas de API pra busca, sem custo extra.</p></div>
+  </div>
+</div></section>
+
+<section id="fluxo"><div class="wrap">
+  <span class="chip">Como funciona</span>
+  <h2>De uma mensagem no Telegram à resposta</h2>
+  <p class="sub">Você manda mensagem; o INTELECTO recebe via long-polling, monta o contexto (SOUL/AGENTS/USER + memórias relevantes), pensa no agent loop (máx. 5 rounds), usa ferramentas se precisar, salva um resumo na memória e responde.</p>
+  <div class="flow">
+    <span>Você no Telegram</span><span class="arr">→</span>
+    <span>Long-polling</span><span class="arr">→</span>
+    <span>ContextBuilder + memória</span><span class="arr">→</span>
+    <span>Agent loop (OpenRouter / Ollama)</span><span class="arr">→</span>
+    <span>Ferramentas</span><span class="arr">→</span>
+    <span>memory.save</span><span class="arr">→</span>
+    <span>Resposta no Telegram</span>
+  </div>
+  <div class="grid g2" style="margin-top:26px">
+    <div class="card"><h3>Stack de identidade</h3><p>A personalidade vive em <code>workspace/SOUL.md</code> (tom e valores), <code>AGENTS.md</code> (regras), <code>USER.md</code> (seu perfil) e <code>MEMORY.md</code> (fatos de bootstrap). Edite no editor de texto.</p></div>
+    <div class="card"><h3>Ferramentas + segurança</h3><p>read_file, write_file, list_directory e run_command (com safety check). Segredos em store Fernet (chave = UUID do hardware), blocklist de comandos e audit log.</p></div>
+  </div>
+</div></section>
+
+<section id="pre"><div class="wrap">
+  <span class="chip">Pré-requisitos</span>
+  <h2>O que ter à mão antes de começar</h2>
+  <p class="sub">É um projeto Python pra macOS. Você precisa de Python 3.11+, um token de bot do Telegram e uma chave do OpenRouter (ou Ollama instalado, se quiser rodar 100% local).</p>
+  <div class="grid g3">
+    <div class="card"><h3>Python 3.11+ (macOS)</h3><p>O <code>start.sh</code> cria o venv e instala as 7 dependências. Confirme a versão:</p><pre><span class="c"># versão do Python</span>
+<span class="k">python3</span> --version</pre></div>
+    <div class="card"><h3>Token do Telegram</h3><p>Crie um bot pelo BotFather e tenha o token pronto pro wizard.</p><pre><span class="c"># no Telegram</span>
+<span class="k">@BotFather</span> → /newbot → <span class="s">copie o token</span></pre></div>
+    <div class="card"><h3>OpenRouter ou Ollama</h3><p>Pegue uma chave em openrouter.ai/keys, ou instale o Ollama pra rodar local.</p><pre><span class="c"># cloud: chave OpenRouter</span>
+<span class="s">openrouter.ai/keys</span>
+<span class="c"># local: ollama instalado</span></pre></div>
+  </div>
+</div></section>
+
+<section id="guia"><div class="wrap">
+  <span class="chip">Guia de uso · passo a passo</span>
+  <h2>Do clone à primeira conversa</h2>
+  <p class="sub">O <code>start.sh</code> faz quase tudo: cria venv, instala dependências e roda o wizard de 6 etapas. Comandos reais do README.</p>
+
+  <div class="step"><div class="b">1</div><div>
+    <h3>Clonar o repositório</h3>
+    <p>Baixe o projeto e entre na pasta.</p>
+<pre><span class="k">git clone</span> <span class="s">https://github.com/inematds/intelecto.git</span>
+<span class="k">cd</span> intelecto</pre>
+  </div></div>
+
+  <div class="step"><div class="b">2</div><div>
+    <h3>Rodar o launcher</h3>
+    <p>Um único comando cria o venv, instala as dependências e abre o wizard de configuração.</p>
+<pre><span class="k">./start.sh</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">3</div><div>
+    <h3>Seguir o wizard (6 etapas)</h3>
+    <p>Cole o token do Telegram, a chave do OpenRouter, escolha o modelo padrão, dê um nome ao assistente e defina a personalidade em uma frase.</p>
+<pre><span class="c"># o wizard pede, em ordem:</span>
+<span class="k">[1/6]</span> Telegram Bot Token
+<span class="k">[2/6]</span> OpenRouter API Key
+<span class="k">[3/6]</span> Modelo padrão   <span class="c"># ex.: Claude Sonnet 4</span>
+<span class="k">[4/6]</span> Nome do assistente
+<span class="k">[5/6]</span> Personalidade em uma frase</pre>
+  </div></div>
+
+  <div class="step"><div class="b">4</div><div>
+    <h3>Deixar instalado e ativo</h3>
+    <p>O wizard salva a config, cria o banco de memória e instala o auto-start (launchd) — o agente reinicia sozinho.</p>
+<pre><span class="c"># o wizard confirma:</span>
+<span class="k">✓</span> Configuração salva
+<span class="k">✓</span> Banco de memória criado
+<span class="k">✓</span> Auto-start instalado (launchd)</pre>
+  </div></div>
+
+  <div class="step"><div class="b">5</div><div>
+    <h3>Conversar e personalizar</h3>
+    <p>Mande uma mensagem no Telegram. Pra ajustar o jeito do assistente, edite os arquivos da workspace no seu editor.</p>
+<pre><span class="c"># edite a identidade quando quiser</span>
+<span class="k">workspace/SOUL.md</span>    <span class="c"># tom e valores</span>
+<span class="k">workspace/USER.md</span>    <span class="c"># seu perfil</span></pre>
+  </div></div>
+</div></section>
+
+<section id="exemplos"><div class="wrap">
+  <span class="chip">Exemplos</span>
+  <h2>O que dá pra fazer com ele</h2>
+  <p class="sub">É um assistente pessoal de verdade: lembra do seu contexto, usa ferramentas no seu Mac e roda do jeito que você configurar — cloud ou local.</p>
+  <div class="grid g2">
+    <div class="card"><h3>Assistente que lembra</h3><p>Pergunte algo da semana passada; a memória SQLite FTS5 traz os fatos relevantes por BM25 e o agente responde com contexto.</p></div>
+    <div class="card"><h3>Mexer em arquivos</h3><p>Peça pra ler, escrever ou listar arquivos — as ferramentas filesystem fazem read_file, write_file e list_directory.</p></div>
+    <div class="card"><h3>Rodar comandos com segurança</h3><p>run_command executa no Mac passando por safety check e blocklist, com tudo registrado no audit log.</p></div>
+    <div class="card"><h3>100% local com Ollama</h3><p>Troque o provider pra Ollama e rode sem mandar nada pra cloud — zero custo e privacidade total.</p></div>
+  </div>
+</div></section>
+
+<section id="roadmap"><div class="wrap">
+  <span class="chip">Roadmap</span>
+  <h2>Filosofia e direção</h2>
+  <p class="sub">O norte é manter o projeto enxuto e legível — o antídoto contra frameworks inchados. As fases abaixo refletem a arquitetura modular (providers, channels, tools, memory) pensada pra crescer sem inchar.</p>
+  <div class="phase"><div class="tag">Hoje</div><div class="d"><strong>Núcleo enxuto</strong><span>Agent loop, memória FTS5, OpenRouter + Ollama, canal Telegram, ferramentas de filesystem/shell e camada de segurança.</span></div></div>
+  <div class="phase"><div class="tag">Extensível</div><div class="d"><strong>Mais providers e canais</strong><span>Interfaces abstratas em providers/, channels/ e tools/ permitem somar modelos, canais e ferramentas sem reescrever o núcleo.</span></div></div>
+  <div class="phase"><div class="tag">Princípio</div><div class="d"><strong>Continuar legível</strong><span>Manter ~3.000 linhas auditáveis, poucas dependências e zero Docker — o anti-bloat como regra de projeto.</span></div></div>
+</div></section>
+
+<footer>
+  <div class="wrap">
+    <div class="pill">Python 3.11+ (macOS)</div><div class="pill">Telegram · OpenRouter · Ollama</div><div class="pill">SQLite FTS5 · Fernet</div>
+    <p style="margin-top:18px">INTELECTO · assistente de IA pessoal sem frameworks inchados ·
+      <a href="https://inematds.github.io/intelecto/" target="_blank">Página do projeto ↗</a> ·
+      <a href="https://github.com/inematds/intelecto">github.com/inematds/intelecto</a> ·
+      <a href="https://inema.club">INEMA.CLUB</a></p>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var KEY='intelecto-guia-theme';
+    var b=document.body, t=document.getElementById('themeToggle');
+    if(localStorage.getItem(KEY)==='light'){ b.classList.add('light'); t.textContent='☀️'; }
+    t.addEventListener('click',function(){
+      var light=b.classList.toggle('light');
+      t.textContent=light?'☀️':'🌙';
+      localStorage.setItem(KEY, light?'light':'dark');
+    });
+  })();
+</script>
+</body>
+</html>
