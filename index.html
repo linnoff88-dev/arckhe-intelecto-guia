@@ -132,7 +132,7 @@
   <div class="grid g3">
     <div class="card"><h3>🧠 Leve e legível</h3><p>~3.000 linhas, 35 arquivos, 7 dependências pip, 0 containers Docker. Nada de YAML infinito — <code>./start.sh</code> e acabou.</p></div>
     <div class="card"><h3>🧠 Local ou cloud, você escolhe</h3><p>OpenRouter (100+ modelos via LiteLLM) ou Ollama 100% local — zero custo, zero privacidade comprometida.</p></div>
-    <div class="card"><h3>🧠 Memória de verdade</h3><p>SQLite FTS5 com ranking BM25 e deduplicação — sem embeddings, sem chamadas de API pra busca, sem custo extra.</p></div>
+    <div class="card"><h3>🧠 Memória de verdade</h3><p>SQLite FTS5 com ranking BM25 e deduplicaçêo — sem embeddings, sem chamadas de API pra busca, sem custo extra.</p></div>
   </div>
 </div></section>
 
@@ -157,10 +157,10 @@
 
 <section id="pre"><div class="wrap">
   <span class="chip">Pré-requisitos</span>
-  <h2>O que ter à mão antes de começar</h2>
+  <h2>O que ter à mêo antes de começar</h2>
   <p class="sub">É um projeto Python pra macOS. Você precisa de Python 3.11+, um token de bot do Telegram e uma chave do OpenRouter (ou Ollama instalado, se quiser rodar 100% local).</p>
   <div class="grid g3">
-    <div class="card"><h3>Python 3.11+ (macOS)</h3><p>O <code>start.sh</code> cria o venv e instala as 7 dependências. Confirme a versão:</p><pre><span class="c"># versão do Python</span>
+    <div class="card"><h3>Python 3.11+ (macOS)</h3><p>O <code>start.sh</code> cria o venv e instala as 7 dependências. Confirme a versêo:</p><pre><span class="c"># versêo do Python</span>
 <span class="k">python3</span> --version</pre></div>
     <div class="card"><h3>Token do Telegram</h3><p>Crie um bot pelo BotFather e tenha o token pronto pro wizard.</p><pre><span class="c"># no Telegram</span>
 <span class="k">@BotFather</span> → /newbot → <span class="s">copie o token</span></pre></div>
@@ -184,17 +184,17 @@
 
   <div class="step"><div class="b">2</div><div>
     <h3>Rodar o launcher</h3>
-    <p>Um único comando cria o venv, instala as dependências e abre o wizard de configuração.</p>
+    <p>Um único comando cria o venv, instala as dependências e abre o wizard de configuraçêo.</p>
 <pre><span class="k">./start.sh</span></pre>
   </div></div>
 
   <div class="step"><div class="b">3</div><div>
     <h3>Seguir o wizard (6 etapas)</h3>
-    <p>Cole o token do Telegram, a chave do OpenRouter, escolha o modelo padrão, dê um nome ao assistente e defina a personalidade em uma frase.</p>
+    <p>Cole o token do Telegram, a chave do OpenRouter, escolha o modelo padrêo, dê um nome ao assistente e defina a personalidade em uma frase.</p>
 <pre><span class="c"># o wizard pede, em ordem:</span>
 <span class="k">[1/6]</span> Telegram Bot Token
 <span class="k">[2/6]</span> OpenRouter API Key
-<span class="k">[3/6]</span> Modelo padrão   <span class="c"># ex.: Claude Sonnet 4</span>
+<span class="k">[3/6]</span> Modelo padrêo   <span class="c"># ex.: Claude Sonnet 4</span>
 <span class="k">[4/6]</span> Nome do assistente
 <span class="k">[5/6]</span> Personalidade em uma frase</pre>
   </div></div>
@@ -203,7 +203,7 @@
     <h3>Deixar instalado e ativo</h3>
     <p>O wizard salva a config, cria o banco de memória e instala o auto-start (launchd) — o agente reinicia sozinho.</p>
 <pre><span class="c"># o wizard confirma:</span>
-<span class="k">✓</span> Configuração salva
+<span class="k">✓</span> Configuraçêo salva
 <span class="k">✓</span> Banco de memória criado
 <span class="k">✓</span> Auto-start instalado (launchd)</pre>
   </div></div>
@@ -231,7 +231,7 @@
 
 <section id="roadmap"><div class="wrap">
   <span class="chip">Roadmap</span>
-  <h2>Filosofia e direção</h2>
+  <h2>Filosofia e direçêo</h2>
   <p class="sub">O norte é manter o projeto enxuto e legível — o antídoto contra frameworks inchados. As fases abaixo refletem a arquitetura modular (providers, channels, tools, memory) pensada pra crescer sem inchar.</p>
   <div class="phase"><div class="tag">Hoje</div><div class="d"><strong>Núcleo enxuto</strong><span>Agent loop, memória FTS5, OpenRouter + Ollama, canal Telegram, ferramentas de filesystem/shell e camada de segurança.</span></div></div>
   <div class="phase"><div class="tag">Extensível</div><div class="d"><strong>Mais providers e canais</strong><span>Interfaces abstratas em providers/, channels/ e tools/ permitem somar modelos, canais e ferramentas sem reescrever o núcleo.</span></div></div>
